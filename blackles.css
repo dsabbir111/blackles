@@ -238,7 +238,13 @@ label.tBkm[data-text]::after{
     border-radius: var(--linkR);
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
-
-
+.bkmC .item:not(:last-child) {
+ border: 2px ridge black;
+    padding: 7px;
+}
+.bkmC .item {
+    border: 2px ridge black;
+  padding: 7px;
+}
 
 </style>
