@@ -1,10 +1,4 @@
 </style>
-
-
-
-
-
-
 /* Widget PopularPosts */
 .itemPp {
   counter-reset: p-cnt;
@@ -181,8 +175,4 @@ background-attachment: fixed;}
 div#author {box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;background-color: white;border: 2px solid black !important;padding: 7px;border-radius: 0px;}
 .headC{position:relative;height:var(--headerHc);color:white;background:linear-gradient(115deg, #121212 0%, #000000 40%, #0E475F 95%);border-bottom: 6px ridge black
 !important;display:flex;gap:6px}
-
-
-
-
 </style>
