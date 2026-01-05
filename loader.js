@@ -3,11 +3,9 @@
   const host=location.hostname.replace(/^www\./,'');
   const key=host.replace(/\./g,'_');
 
-  // Fetch site data
   let site=await fetch(`${DB}/sites/${key}.json`).then(r=>r.json());
 
   if(!site){
-    // Auto-add site (pending)
     await fetch(`${DB}/sites/${key}.json`,{
       method:"PUT",
       body:JSON.stringify({
@@ -18,32 +16,27 @@
         usage:0,
         views:0,
         lastVisit:null,
-        countryAllow: ["BD","IN"],
-        features:{rightClick:true,copyPaste:true,devTools:false},
-        cdn:{css:[],js:[]}
+        countryAllow:["BD","IN"],
+        features:{rightClick:true,copyPaste:true,devTools:false,customCSS:false,customJS:false},
+        cdn:{css:[],js:[]},
+        expiry:new Date(Date.now()+365*24*60*60*1000).toISOString()
       })
     });
     document.body.innerHTML="<h2 style='text-align:center'>Site pending approval</h2>";
     return;
   }
 
-  // License check
-  if(!site.licenseKey || site.status!=="approved"){
-    document.body.innerHTML="<h1 style='text-align:center'>Site Locked / Invalid License</h1>";
+  // LICENSE / EXPIRY / LOCK check
+  const now=new Date();
+  if(!site.licenseKey || site.status!=="approved" || site.lock || new Date(site.expiry)<now){
+    document.body.innerHTML="<h1 style='text-align:center'>Site Locked / Invalid License / Expired</h1>";
     return;
   }
 
-  // Country check
-  const userCountry = "BD"; // Example, integrate GeoIP later
+  // Country check (example)
+  const userCountry="BD"; // integrate real GeoIP
   if(site.countryAllow && !site.countryAllow.includes(userCountry)){
     document.body.innerHTML="<h1 style='text-align:center'>Access Denied</h1>";
-    return;
-  }
-
-  // Auto rules: usage limit
-  if(site.usage>10000){
-    await fetch(`${DB}/sites/${key}/lock.json`,{method:"PUT",body:"true"});
-    document.body.innerHTML="<h1 style='text-align:center'>Site Locked: Usage Limit</h1>";
     return;
   }
 
