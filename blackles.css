@@ -215,4 +215,16 @@ input {
 .bkmC .del:hover {
     opacity: .55;
 }
+
+
+label.tBkm[data-text]::after{
+  color:#000 !important;      /* নাম্বার black */
+  background:#fff !important; /* badge background */
+}
+
+
+
+
+
+
 </style>
