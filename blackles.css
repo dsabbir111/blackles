@@ -222,9 +222,22 @@ label.tBkm[data-text]::after{
   color:#000 !important;      /* নাম্বার black */
   background:#fff !important; /* badge background */
 }
-
-
-
+.blogN .nPst {
+    background: linear-gradient(135deg, #000000, #000000, #46314f);
+    color: #989b9fb5;
+}
+.blogN >* {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 10px 13px;
+    color: inherit;
+    background: linear-gradient(135deg, #000000, #000000, #46314f);
+    border-radius: var(--linkR);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
 
 
 
