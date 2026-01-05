@@ -1,43 +1,49 @@
+<script>
 (async()=>{
-const d=location.hostname.replace('www.','').replace(/\./g,'_');
-const DB="https://bhai-rk-default-rtdb.firebaseio.com";
+  const DB="https://bhai-rk-default-rtdb.firebaseio.com";
 
-const site=await fetch(`${DB}/sites/${d}.json`).then(r=>r.json());
+  let host=location.hostname.toLowerCase().replace(/^www\./,'');
+  let key=host.replace(/\./g,'_');
 
-if(!site){
- document.body.innerHTML="Unauthorized Domain";
- return;
-}
+  const site=await fetch(`${DB}/sites/${key}.json`).then(r=>r.json());
 
-if(site.expiry && new Date(site.expiry)<new Date()){
- document.body.innerHTML="Expired";
- return;
-}
+  if(!site){
+    document.body.innerHTML="<h2 style='color:red'>Unauthorized Domain</h2>";
+    return;
+  }
 
-if(site.active!==true){
- document.body.innerHTML=site.message||"Disabled";
- return;
-}
+  /* STATUS COLORS (admin side only) */
 
-if(site.lock){
- document.body.innerHTML=site.message||"Maintenance";
- return;
-}
+  if(site.active!==true){
+    document.body.innerHTML=site.message||"Site Disabled";
+    return;
+  }
 
-(site.css||[]).forEach(u=>{
- let l=document.createElement('link');
- l.rel='stylesheet';l.href=u;document.head.appendChild(l);
-});
+  if(site.lock){
+    document.body.innerHTML=site.message||"Maintenance Mode";
+    return;
+  }
 
-(site.js||[]).forEach(u=>{
- let s=document.createElement('script');
- s.src=u;s.defer=true;document.head.appendChild(s);
-});
+  /* CSS LOAD */
+  (site.css||[]).forEach(u=>{
+    let l=document.createElement("link");
+    l.rel="stylesheet";l.href=u;
+    document.head.appendChild(l);
+  });
 
-if(site.security?.rightClick===false){
- document.addEventListener('contextmenu',e=>e.preventDefault());
-}
-if(site.security?.copy===false){
- document.addEventListener('copy',e=>e.preventDefault());
-}
+  /* JS LOAD */
+  (site.js||[]).forEach(u=>{
+    let s=document.createElement("script");
+    s.src=u;s.defer=true;
+    document.head.appendChild(s);
+  });
+
+  /* SECURITY */
+  if(site.security?.rightClick===false)
+    document.addEventListener("contextmenu",e=>e.preventDefault());
+
+  if(site.security?.copy===false)
+    document.addEventListener("copy",e=>e.preventDefault());
+
 })();
+</script>
