@@ -41,7 +41,7 @@
   }
 
   // Country check (example)
-  const userCountry="BD"; // integrate real GeoIP if needed
+  const userCountry="BD";
   if(site.countryAllow && !site.countryAllow.includes(userCountry)){
     document.body.innerHTML="<h1 style='text-align:center'>Access Denied</h1>";
     return;
