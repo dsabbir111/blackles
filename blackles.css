@@ -189,4 +189,23 @@ input {
     color: white;
     line-height: normal;
 }
+.wBkm {
+    position: absolute;
+    top: calc(100% + (var(--headerHc) - 100%) / 2);
+    inset-inline-end: 0;
+    display: flex;
+    max-height: calc(100vh - (var(--headerHc) + 40vh));
+    width: 375px;
+    background: linear-gradient(135deg, #000000, #000000, #46314f);
+    border-radius: 10px;
+    border-start-end-radius: 5px;
+    border: 1px solid var(--contentL);
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(.8);
+    transform-origin: top right;
+    transition: var(--trans-2);
+    overflow: hidden;
+    z-index: 4;
+}
 </style>
