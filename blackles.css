@@ -181,4 +181,12 @@ div#author {box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 
 transition:transform 0.3s ease;}.mnMn input:checked + label::after{transform:rotate(180deg);}.mnBr ul{list-style:none;margin:0;padding:0} .mnMn svg{flex-shrink:0} .mnMn svg.d{width:14px;height:14px}
 @media screen and (min-width:897px){
 .mnH{display:none} .mnMob, .mnMn svg:not(.d){display:none} .mnMn{display:block;position:relative;width:calc(100% + 25px);left:-12.5px;right:-12.5px;height: 0px;top: -60px;} .mnMn >li{display:inline-flex; align-items:center;margin:0 12.5px;position:relative;white-space:nowrap;height:var(--headerH)} .mnMn >li:hover ul{max-height:100vh; opacity:1;visibility:visible} .mnMn >li:last-child ul{left:auto;border-radius:16px 5px 16px 16px} .mnMn ul{display:block; position:absolute;top:calc(var(--headerH) - 15px);left:-15px;right:-15px; min-width:180px; max-height:0vh; background:var(--contentB); box-shadow:0 10px 20px -10px rgba(0,0,0,.1); border-radius:5px 16px 16px 16px; transition:var(--trans-1); opacity:0;visibility:hidden;z-index:1; overflow:hidden} .mnMn ul li >*{display:block;padding:10px 15px} .mnMn ul li >*:hover{background:var(--transB)} .mnMn .a{display:inline-flex;align-items:center} .mnMn .a:hover{color:var(--linkC)} .mnMn .a:hover::after{opacity:1} .mnMn .a::after{content:'';border-bottom:1px solid var(--linkC);position:absolute;bottom:-1px;left:0;right:0;opacity:0} .mnMn .drp .n::after{content:'';padding:0 3px;flex:0 0}}
+input {
+    outline: none;
+    font: inherit;
+    font-size: 100%;
+    background: linear-gradient(313deg, #000000, #000000, #46314f);
+    color: white;
+    line-height: normal;
+}
 </style>
