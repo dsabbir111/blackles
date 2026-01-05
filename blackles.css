@@ -208,4 +208,7 @@ input {
     overflow: hidden;
     z-index: 4;
 }
+.srlM{display:flex;flex-direction:column;width:100%;background:linear-gradient(115deg, #121212 0%, #000000 40%, #0E475F 95%);border:1px solid var(--contentL);border-radius:10px;transition:var(--trans-2);overflow:hidden}
+
+
 </style>
