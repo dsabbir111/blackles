@@ -212,5 +212,7 @@ input {
 .bkmC .itmTtl a:hover {
     color: rgb(141 141 141);
 }
-
+.bkmC .del:hover {
+    opacity: .55;
+}
 </style>
