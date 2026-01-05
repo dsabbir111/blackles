@@ -1,4 +1,3 @@
-<script>
 (async()=>{
   const DB="https://bhai-rk-default-rtdb.firebaseio.com";
 
@@ -83,4 +82,3 @@
   });
 
 })();
-</script>
