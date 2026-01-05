@@ -2,83 +2,85 @@
 (async()=>{
   const DB="https://bhai-rk-default-rtdb.firebaseio.com";
 
-  let host=location.hostname.toLowerCase().replace(/^www\./,'');
-  let key=host.replace(/\./g,'_');
+  let host = location.hostname.toLowerCase().replace(/^www\./,'');
+  let key  = host.replace(/\./g,'_');
 
-  let site = await fetch(`${DB}/sites/${key}.json`).then(r=>r.json());
+  const url = `${DB}/sites/${key}.json`;
 
-  /* AUTO DOMAIN REGISTER */
-  if(!site){
-    await fetch(`${DB}/sites/${key}.json`,{
+  let res = await fetch(url);
+  let site = await res.json();
+
+  /* ========= AUTO DOMAIN REGISTER (FIXED) ========= */
+  if(site === null){
+    await fetch(url,{
       method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
       body:JSON.stringify({
-        active:false,
-        lock:true,
-        message:"Pending Approval",
-        css:[],
-        js:[],
-        usage:0,
-        security:{}
+        domain: host,
+        active: false,
+        lock: true,
+        message: "Pending Approval",
+        css: [],
+        js: [],
+        usage: 0,
+        security: {
+          rightClick: true,
+          copy: true,
+          select: true,
+          antiInspect: false
+        },
+        createdAt: Date.now()
       })
     });
-    document.body.innerHTML="<h2>Domain Registered. Waiting approval.</h2>";
+
+    document.body.innerHTML = `
+      <h2 style="text-align:center;margin-top:20%">
+        Domain registered successfully.<br>
+        Waiting for admin approval.
+      </h2>`;
     return;
   }
+  /* =============================================== */
 
   /* USAGE COUNT */
-  fetch(`${DB}/sites/${key}/usage.json`)
+  fetch(`${url.replace('.json','')}/usage.json`)
   .then(r=>r.json())
   .then(n=>{
-    fetch(`${DB}/sites/${key}/usage.json`,{
+    fetch(`${url.replace('.json','')}/usage.json`,{
       method:"PUT",
+      headers:{ "Content-Type":"application/json" },
       body:JSON.stringify((n||0)+1)
     });
   });
 
   /* STATUS CHECK */
-  if(site.active!==true){
-    document.body.innerHTML=site.message||"Site Disabled";
+  if(site.active !== true){
+    document.body.innerHTML = site.message || "Site Disabled";
     return;
   }
+
   if(site.lock){
-    document.body.innerHTML=site.message||"Maintenance";
+    document.body.innerHTML = site.message || "Maintenance";
     return;
   }
 
   /* LOAD CSS */
-  (site.css||[]).forEach(u=>{
+  (site.css || []).forEach(u=>{
     let l=document.createElement("link");
-    l.rel="stylesheet";l.href=u;
+    l.rel="stylesheet";
+    l.href=u;
     document.head.appendChild(l);
   });
 
   /* LOAD JS */
-  (site.js||[]).forEach(u=>{
+  (site.js || []).forEach(u=>{
     let s=document.createElement("script");
-    s.src=u;s.defer=true;
+    s.src=u;
+    s.defer=true;
     document.head.appendChild(s);
   });
 
-  /* SECURITY */
-  if(site.security?.rightClick===false)
-    document.addEventListener("contextmenu",e=>e.preventDefault());
-
-  if(site.security?.copy===false)
-    document.addEventListener("copy",e=>e.preventDefault());
-
-  if(site.security?.select===false)
-    document.addEventListener("selectstart",e=>e.preventDefault());
-
-  /* ANTI INSPECT */
-  if(site.security?.antiInspect){
-    setInterval(()=>{
-      if(
-        window.outerWidth-window.innerWidth>160 ||
-        window.outerHeight-window.innerHeight>160
-      ){
-        document.body.innerHTML="<h1>Blocked</h1>";
-      }
-    },800);
-  }
 })();
 </script>
