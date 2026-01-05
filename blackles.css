@@ -180,6 +180,10 @@ background-attachment: fixed;}
 .fotS li >* {--svgW: 20px;--svgH: 20px;color: #000000;display: inline-flex;align-items: center;justify-content: center;width: 30px;height: 30px;background: linear-gradient(135deg, #3f3f3f 0%, #676767 40%, #cc9700 95%);border: 3px ridge black !important;border-radius: var(--linkR);opacity: 1;}
 .onId .blogP >article:not(.pTag){background: linear-gradient(0deg, #ffffff 6%, #ffffff 38%, #000000 70%, #000000);border: 0.1px solid black !important;padding-bottom:calc(var(--szpd) + 35px)}
 div#author {box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;background-color: white;border: 2px solid black !important;padding: 7px;border-radius: 0px;}
+.headC{position:relative;height:var(--headerHc);color:white;background:linear-gradient(115deg, #121212 0%, #000000 40%, #0E475F 95%);border-bottom: 6px ridge black
+!important;display:flex;gap:6px}
+
+
 
 
 </style>
