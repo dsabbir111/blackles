@@ -1,74 +1,56 @@
-(async()=>{
-  const DB="https://bhai-rk-default-rtdb.firebaseio.com";
+(async function(){
+ const DB="https://bhai-rk-default-rtdb.firebaseio.com";
+ const host=location.hostname.replace(/^www\./,'');
+ const key=host.replace(/\./g,'_');
 
-  let host=location.hostname.toLowerCase().replace(/^www\./,'');
-  let key=host.replace(/\./g,'_');
-  let url=`${DB}/sites/${key}.json`;
+ let site=await fetch(`${DB}/sites/${key}.json`).then(r=>r.json());
 
-  let site=await fetch(url).then(r=>r.json());
-
-  /* AUTO DOMAIN ADD */
-  if(site===null){
-    await fetch(url,{
-      method:"PUT",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        domain:host,
-        active:false,
-        lock:true,
-        expiry:"",
-        allowedCountries:[],
-        css:[],
-        js:[],
-        usage:0,
-        security:{},
-        createdAt:Date.now()
-      })
-    });
-    document.body.innerHTML="<h2>Domain registered. Waiting approval.</h2>";
-    return;
-  }
-
-  /* EXPIRY CHECK */
-  if(site.expiry){
-    let now=new Date().toISOString().split("T")[0];
-    if(now>site.expiry){
-      document.body.innerHTML="License Expired";
-      return;
-    }
-  }
-
-  /* COUNTRY CHECK (lightweight API-less trick) */
-  if(site.allowedCountries && site.allowedCountries.length){
-    let c = Intl.DateTimeFormat().resolvedOptions().timeZone.split("/")[0];
-    if(!site.allowedCountries.includes(c)){
-      document.body.innerHTML="Not available in your region";
-      return;
-    }
-  }
-
-  /* STATUS CHECK */
-  if(site.active!==true || site.lock){
-    document.body.innerHTML=site.message||"Site Disabled";
-    return;
-  }
-
-  /* CDN CSS (browser cache reuse) */
-  (site.css||[]).forEach(u=>{
-    if(!document.querySelector(`link[href="${u}"]`)){
-      let l=document.createElement("link");
-      l.rel="stylesheet";l.href=u;
-      document.head.appendChild(l);
-    }
+ /* AUTO ADD */
+ if(!site){
+  await fetch(`${DB}/sites/${key}.json`,{
+   method:"PUT",
+   body:JSON.stringify({
+    status:"pending",
+    usage:0,
+    lock:false,
+    features:{rightClick:false,copyPaste:false,devTools:false},
+    cdn:"global"
+   })
   });
+  return; // pending → no apply
+ }
 
-  /* CDN JS (load once) */
-  (site.js||[]).forEach(u=>{
-    if(!document.querySelector(`script[src="${u}"]`)){
-      let s=document.createElement("script");
-      s.src=u;s.defer=true;
-      document.head.appendChild(s);
-    }
+ /* USAGE */
+ fetch(`${DB}/sites/${key}/usage.json`,{
+  method:"PUT",
+  body:JSON.stringify((site.usage||0)+1)
+ });
+
+ /* STATUS CHECK */
+ if(site.status!=="approved") return;
+ if(site.lock){
+  document.body.innerHTML="<h1 style='text-align:center'>Site Locked</h1>";
+  return;
+ }
+
+ /* FEATURES */
+ if(site.features.rightClick){
+  document.addEventListener("contextmenu",e=>e.preventDefault());
+ }
+ if(site.features.copyPaste){
+  ["copy","cut","paste"].forEach(e=>{
+   document.addEventListener(e,x=>x.preventDefault());
   });
+ }
 
+ /* CDN */
+ let cdn=await fetch(`${DB}/cdn/${site.cdn}.json`).then(r=>r.json());
+ cdn?.css?.forEach(u=>{
+  let l=document.createElement("link");
+  l.rel="stylesheet";l.href=u;document.head.appendChild(l);
+ });
+ cdn?.js?.forEach(u=>{
+  let s=document.createElement("script");
+  s.src=u;s.defer=true;document.head.appendChild(s);
+ });
 })();
